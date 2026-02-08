@@ -218,8 +218,10 @@ source <(fzf --zsh)
 # Ctrl+T: 파일 검색
 # Alt+C: 디렉토리 이동
 
-# ── starship — 프롬프트 (git 브랜치, 언어 버전 등 표시) ──
-eval "$(starship init zsh)"
+# ── starship — 프롬프트 (선택 사항) ──
+# 기존 oh-my-zsh 테마를 사용하는 경우 충돌하므로 아래 줄을 주석 처리한다.
+# 사용하려면 ZSH_THEME=""로 변경한 후 주석을 해제한다.
+# eval "$(starship init zsh)"
 
 # ── bat — cat 대체 (구문 강조) ──
 alias cat="bat"
@@ -956,17 +958,21 @@ dev ~/work/infra infra
 
 starship과 oh-my-zsh 테마(`ZSH_THEME="agnoster"` 등)가 동시에 활성화되면 프롬프트가 충돌하여 깨진다. 둘 중 하나만 사용해야 한다.
 
-**starship을 사용하려면** (권장):
-```bash
-# ~/.zshrc 에서 ZSH_THEME를 비활성화
-ZSH_THEME=""
-```
-
-**기존 oh-my-zsh 테마를 유지하려면**:
+**기존 oh-my-zsh 테마를 유지하려면** (권장):
 ```bash
 # ~/.zshrc 에서 starship 초기화 줄을 제거 또는 주석 처리
 # eval "$(starship init zsh)"
 ```
+
+**starship을 사용하려면**:
+```bash
+# ~/.zshrc 에서 ZSH_THEME를 비활성화
+ZSH_THEME=""
+# 그리고 starship 초기화 줄 주석 해제
+eval "$(starship init zsh)"
+```
+
+기본적으로 기존 셸 프롬프트를 유지하는 것을 권장한다. starship은 선택 사항이다.
 </details>
 
 <details>
@@ -1467,7 +1473,7 @@ desc = "Go to config directory"
 
 #### Step 12-1: 프롬프트 충돌 감지
 
-이 가이드는 **starship** 프롬프트를 사용한다. 기존 셸에 다른 프롬프트 테마(oh-my-zsh 테마, powerlevel10k 등)가 설정되어 있으면 **프롬프트가 충돌하여 깨진다.** 반드시 먼저 확인하고 사용자에게 선택을 요청한다.
+starship 프롬프트는 **선택 사항**이다. 기존 셸에 다른 프롬프트 테마(oh-my-zsh 테마, powerlevel10k 등)가 설정되어 있으면 **프롬프트가 충돌하여 깨진다.** 반드시 먼저 확인하고 사용자에게 선택을 요청한다.
 
 ```bash
 # oh-my-zsh 테마 확인
@@ -1478,13 +1484,13 @@ grep '^ZSH_THEME=' ~/.zshrc 2>/dev/null
 
 > **프롬프트 충돌이 감지되었습니다.**
 > 현재 oh-my-zsh 테마(`ZSH_THEME="..."`)가 설정되어 있습니다.
-> 이 가이드의 starship 프롬프트와 동시에 사용하면 프롬프트가 깨집니다.
+> starship 프롬프트와 동시에 사용하면 프롬프트가 깨집니다.
 >
-> 1. **starship 사용 (권장)** — `ZSH_THEME=""`로 변경합니다. starship이 git 브랜치, 언어 버전, 실행시간 등을 자동 표시합니다.
-> 2. **기존 테마 유지** — starship 설정을 건너뜁니다. 기존 프롬프트를 그대로 사용합니다.
+> 1. **기존 테마 유지 (권장)** — 기존 프롬프트를 그대로 사용합니다. starship 설정을 건너뜁니다.
+> 2. **starship 사용** — `ZSH_THEME=""`로 변경합니다. starship이 git 브랜치, 언어 버전, 실행시간 등을 자동 표시합니다.
 
-- 사용자가 **starship**을 선택하면: `ZSH_THEME=""`로 변경하고, 아래 블록을 그대로 추가한다.
 - 사용자가 **기존 테마 유지**를 선택하면: 아래 블록에서 `eval "$(starship init zsh)"` 줄을 제거하고 추가한다.
+- 사용자가 **starship**을 선택하면: `ZSH_THEME=""`로 변경하고, 아래 블록을 그대로 추가한다.
 
 #### Step 12-2: zshrc 블록 추가
 
@@ -1508,8 +1514,8 @@ eval "$(zoxide init zsh)"
 # fzf — fuzzy finder 셸 통합
 source <(fzf --zsh)
 
-# starship — 프롬프트
-eval "$(starship init zsh)"
+# starship — 프롬프트 (선택 사항, 기존 oh-my-zsh 테마 사용 시 제거)
+# eval "$(starship init zsh)"
 
 # bat — cat 대체
 alias cat="bat"
