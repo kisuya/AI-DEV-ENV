@@ -161,7 +161,7 @@ font-family = "JetBrains Mono"
 font-size = 14
 
 # ── 테마 (전체 도구와 통일) ──
-theme = catppuccin-mocha
+theme = Catppuccin Mocha
 
 # ── 이미지 프로토콜 (yazi 미리보기에 필요) ──
 image-storage-limit = 320000000
@@ -169,12 +169,6 @@ image-storage-limit = 320000000
 # ── 창 설정 ──
 window-padding-x = 8
 window-padding-y = 8
-window-decoration = false
-macos-titlebar-style = hidden
-
-# ── tmux와 함께 쓸 것이므로 자체 탭/윈도우 비활성화 ──
-keybind = super+t=unbind
-keybind = super+n=unbind
 
 # ── 클립보드 (OSC 52 — SSH 원격에서도 작동) ──
 clipboard-read = allow
@@ -193,10 +187,8 @@ mouse-scroll-multiplier = 3
 | 설정 | 목적 |
 |---|---|
 | `font-family` | Nerd Font 호환 코딩 폰트. 아이콘 표시에 필요 |
-| `theme` | catppuccin-mocha — 전체 도구와 테마 통일 |
+| `theme` | Catppuccin Mocha — 전체 도구와 테마 통일 |
 | `image-storage-limit` | yazi에서 이미지 미리보기 시 메모리 할당량 (300MB+) |
-| `window-decoration = false` | 타이틀바 제거. tmux 상태바가 대체 |
-| `keybind = super+t=unbind` | Ghostty 자체 탭 기능 비활성화. tmux가 담당 |
 | `clipboard-read/write = allow` | OSC 52 기반 클립보드. SSH 원격에서도 작동 |
 | `cursor-style-blink = false` | 깜빡임 제거. 시각적 노이즈 감소 |
 
@@ -823,11 +815,11 @@ dev ~/work/infra infra
 
 ### 테마 통일
 
-모든 도구가 **catppuccin-mocha** 테마를 사용하도록 설정되어 시각적 일관성이 유지된다.
+모든 도구가 **Catppuccin Mocha** 테마를 사용하도록 설정되어 시각적 일관성이 유지된다.
 
 | 도구 | 설정 |
 |---|---|
-| Ghostty | `theme = catppuccin-mocha` |
+| Ghostty | `theme = Catppuccin Mocha` |
 | tmux | 상태바 색상 `#1e1e2e`, `#cdd6f4` (catppuccin 팔레트) |
 | Neovim | catppuccin 플러그인 (transparent_background) |
 | bat | `bat --theme="Catppuccin Mocha"` 또는 `~/.config/bat/config`에 설정 |
@@ -1199,14 +1191,10 @@ mkdir -p ~/.config/ghostty
 ```
 font-family = "JetBrains Mono"
 font-size = 14
-theme = catppuccin-mocha
+theme = Catppuccin Mocha
 image-storage-limit = 320000000
 window-padding-x = 8
 window-padding-y = 8
-window-decoration = false
-macos-titlebar-style = hidden
-keybind = super+t=unbind
-keybind = super+n=unbind
 clipboard-read = allow
 clipboard-write = allow
 cursor-style = bar
