@@ -169,6 +169,7 @@ GPU 가속 네이티브 터미널. 모든 TUI 도구의 기반.
 ```
 # ── 폰트 ──
 font-family = "JetBrains Mono"
+font-family = "AppleSDGothicNeo-Regular"
 font-size = 14
 
 # ── 테마 (전체 도구와 통일) ──
@@ -197,7 +198,7 @@ mouse-scroll-multiplier = 3
 
 | 설정 | 목적 |
 |---|---|
-| `font-family` | Nerd Font 호환 코딩 폰트. 아이콘 표시에 필요 |
+| `font-family` | Nerd Font 호환 코딩 폰트. 두 번째 `font-family`는 한국어 폴백 폰트 |
 | `theme` | Catppuccin Mocha — 전체 도구와 테마 통일 |
 | `image-storage-limit` | yazi에서 이미지 미리보기 시 메모리 할당량 (300MB+) |
 | `clipboard-read/write = allow` | OSC 52 기반 클립보드. SSH 원격에서도 작동 |
@@ -280,7 +281,7 @@ git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
 
 ### 설정 파일: `~/.tmux.conf`
 
-아래 설정은 7개 블록으로 구성되어 있다. 각 블록은 특정 불편을 해결한다.
+아래 설정은 8개 블록으로 구성되어 있다. 각 블록은 특정 불편을 해결한다.
 
 ```bash
 # ══════════════════════════════════════════════
@@ -332,6 +333,7 @@ set -g set-clipboard on
 set -g allow-passthrough all
 set -ga update-environment TERM
 set -ga update-environment TERM_PROGRAM
+set-environment -g TERM_PROGRAM ghostty
 
 
 # ══════════════════════════════════════════════
@@ -375,6 +377,27 @@ bind -n S-Right next-window
 
 # 세션 전환 단축키
 bind s choose-tree -sZ
+
+
+# ══════════════════════════════════════════════
+# 블록 2-1: 세션 관리
+# ══════════════════════════════════════════════
+
+# 세션 목록 (fzf) — prefix + S
+bind S display-popup -w 60% -h 50% -E "\
+  tmux list-sessions -F '#{session_name}: #{session_windows} windows (#{session_attached} attached)' | \
+  fzf --reverse --header='세션 전환 (Enter: 전환, Ctrl-C: 취소)' | \
+  cut -d: -f1 | \
+  xargs -I{} tmux switch-client -t {}"
+
+# 새 세션 생성 — prefix + C (대문자)
+bind C command-prompt -p "새 세션 이름:" "new-session -s '%%'"
+
+# 현재 세션 이름 변경 — prefix + R (대문자)
+bind R command-prompt -I "#S" "rename-session '%%'"
+
+# 현재 세션 종료 — prefix + X (대문자)
+bind X confirm-before -p "세션 '#{session_name}' 종료? (y/n)" kill-session
 
 
 # ══════════════════════════════════════════════
@@ -612,7 +635,7 @@ mkdir -p ~/.config/yazi
 
 ```toml
 [mgr]
-ratio = [1, 3, 4]              # 부모:현재:미리보기 패널 비율
+ratio = [0, 2, 4]              # 부모:현재:미리보기 패널 비율 (부모 패널 숨김)
 show_hidden = true              # 숨김 파일(.env, .gitignore 등) 표시
 sort_by = "natural"             # 자연어 순서 정렬 (file1 < file2 < file10)
 sort_dir_first = true           # 디렉토리를 파일보다 위에 표시
@@ -847,7 +870,11 @@ dev ~/work/infra infra
 | 카테고리 | 동작 | 단축키 |
 |---|---|---|
 | **세션** | detach (나가기, 세션 유지) | `prefix + d` |
-| | 세션 목록/전환 | `prefix + s` |
+| | 세션 목록/전환 (트리) | `prefix + s` |
+| | 세션 목록/전환 (fzf) | `prefix + S` |
+| | 새 세션 생성 | `prefix + C` |
+| | 세션 이름 변경 | `prefix + R` |
+| | 세션 종료 | `prefix + X` |
 | | 설정 리로드 | `prefix + r` |
 | **윈도우** | 새 윈도우 | `prefix + c` |
 | | 다음/이전 윈도우 | `Shift + →/←` |
@@ -1246,6 +1273,7 @@ mkdir -p ~/.config/ghostty
 
 ```
 font-family = "JetBrains Mono"
+font-family = "AppleSDGothicNeo-Regular"
 font-size = 14
 theme = Catppuccin Mocha
 image-storage-limit = 320000000
@@ -1296,6 +1324,10 @@ set -g base-index 1
 setw -g pane-base-index 1
 set -g renumber-windows on
 set -g set-clipboard on
+set -g allow-passthrough all
+set -ga update-environment TERM
+set -ga update-environment TERM_PROGRAM
+set-environment -g TERM_PROGRAM ghostty
 
 # ══════════════════════════════════════════════
 # 블록 2: 패널(Pane) 관리
@@ -1321,6 +1353,18 @@ bind m resize-pane -Z
 bind -n S-Left previous-window
 bind -n S-Right next-window
 bind s choose-tree -sZ
+
+# ══════════════════════════════════════════════
+# 블록 2-1: 세션 관리
+# ══════════════════════════════════════════════
+bind S display-popup -w 60% -h 50% -E "\
+  tmux list-sessions -F '#{session_name}: #{session_windows} windows (#{session_attached} attached)' | \
+  fzf --reverse --header='세션 전환 (Enter: 전환, Ctrl-C: 취소)' | \
+  cut -d: -f1 | \
+  xargs -I{} tmux switch-client -t {}"
+bind C command-prompt -p "새 세션 이름:" "new-session -s '%%'"
+bind R command-prompt -I "#S" "rename-session '%%'"
+bind X confirm-before -p "세션 '#{session_name}' 종료? (y/n)" kill-session
 
 # ══════════════════════════════════════════════
 # 블록 3: 복사 모드
@@ -1436,7 +1480,7 @@ mkdir -p ~/.config/yazi
 
 ```toml
 [mgr]
-ratio = [1, 3, 4]
+ratio = [0, 2, 4]
 show_hidden = true
 sort_by = "natural"
 sort_dir_first = true
