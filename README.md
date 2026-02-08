@@ -34,7 +34,7 @@
 4. [3단계: 셸 환경 설정](#3단계-셸-환경-설정)
 5. [4단계: tmux 설정](#4단계-tmux-설정)
 6. [5단계: Neovim 설정 (LazyVim)](#5단계-neovim-설정-lazyvim)
-7. [6단계: yazi 설정](#6단계-yazi-설정)
+7. [6단계: yazi 설정 (선택)](#6단계-yazi-설정-선택)
 8. [7단계: 프로젝트 세션 자동화](#7단계-프로젝트-세션-자동화)
 9. [AI 워크플로우](#ai-워크플로우)
 10. [단축키 치트시트](#단축키-치트시트)
@@ -87,7 +87,7 @@ yazi    ─── 파일 탐색. 프로젝트 구조를 시각적으로 파악�
 ### 핵심 도구
 
 ```bash
-brew install ghostty tmux neovim yazi
+brew install ghostty tmux neovim
 ```
 
 | 도구 | 역할 |
@@ -95,6 +95,17 @@ brew install ghostty tmux neovim yazi
 | **[Ghostty](https://ghostty.org/)** | GPU 가속 네이티브 터미널 에뮬레이터. 빠른 렌더링, 이미지 프로토콜 지원. |
 | **[tmux](https://github.com/tmux/tmux)** | 터미널 멀티플렉서. 세션 영속성, 윈도우/패널 관리. |
 | **[neovim](https://github.com/neovim/neovim)** | vim의 현대적 포크. LSP, 플러그인, 비동기 처리 기본 지원. |
+
+### 선택: TUI 파일 매니저
+
+> yazi는 터미널 기반 파일 매니저다. 파일 복사/이동/삭제, 이미지 미리보기 등 파일 관리 작업을 터미널에서 하고 싶을 때 유용하다. 코딩 중 파일 탐색만 필요하다면 nvim 내장 파일 트리(neo-tree)로 충분하므로 **설치하지 않아도 된다.**
+
+```bash
+brew install yazi
+```
+
+| 도구 | 역할 |
+|---|---|
 | **[yazi](https://github.com/sxyazi/yazi)** | Rust 기반 TUI 파일 매니저. 코드 하이라이팅, 이미지 미리보기 지원. |
 
 ### 보조 CLI 도구
@@ -114,7 +125,7 @@ brew install fzf fd ripgrep bat eza zoxide lazygit starship
 | **[lazygit](https://github.com/jesseduffield/lazygit)** | TUI Git 클라이언트. 커밋, 브랜치, diff를 시각적으로 수행 | `git` CLI |
 | **[starship](https://starship.rs/)** | 크로스셸 프롬프트. git 브랜치, 언어 버전 등 컨텍스트 표시 | 기본 프롬프트 |
 
-### yazi 미리보기 의존성
+### 선택: yazi 미리보기 의존성
 
 ```bash
 brew install ffmpegthumbnailer poppler imagemagick
@@ -591,7 +602,7 @@ return {
 
 ---
 
-## 6단계: yazi 설정
+## 6단계: yazi 설정 (선택)
 
 ### 기본 설정: `~/.config/yazi/yazi.toml`
 
@@ -1183,12 +1194,19 @@ Homebrew가 없으면 설치를 안내하고 중단한다. AI가 Homebrew를 직
 ### Step 2: 핵심 도구 설치
 
 ```bash
-brew install ghostty tmux neovim yazi
+brew install ghostty tmux neovim
 ```
 
 **검증:**
 ```bash
-ghostty --version && tmux -V && nvim --version | head -1 && yazi --version
+ghostty --version && tmux -V && nvim --version | head -1
+```
+
+사용자에게 yazi(TUI 파일 매니저) 설치 여부를 확인한다. 코딩 중 파일 탐색만 필요하면 nvim 파일 트리로 충분하므로 선택 사항이다.
+
+```bash
+# 선택: yazi 설치
+brew install yazi
 ```
 
 ---
@@ -1206,7 +1224,7 @@ fzf --version && fd --version && rg --version && bat --version && eza --version 
 
 ---
 
-### Step 4: yazi 미리보기 의존성 설치
+### Step 4: yazi 미리보기 의존성 설치 (yazi를 설치한 경우)
 
 ```bash
 brew install ffmpegthumbnailer poppler imagemagick
@@ -1417,7 +1435,7 @@ return {
 
 ---
 
-### Step 11: yazi 설정
+### Step 11: yazi 설정 (yazi를 설치한 경우)
 
 ```bash
 mkdir -p ~/.config/yazi
