@@ -317,6 +317,11 @@ set -g renumber-windows on
 # 클립보드 연동 (OSC 52)
 set -g set-clipboard on
 
+# yazi 이미지 미리보기를 위한 패스스루 허용
+set -g allow-passthrough all
+set -ga update-environment TERM
+set -ga update-environment TERM_PROGRAM
+
 
 # ══════════════════════════════════════════════
 # 블록 2: 패널(Pane) 관리
@@ -378,7 +383,10 @@ bind -T copy-mode-vi y send -X copy-pipe-and-cancel "pbcopy"
 # 팝업은 열었다 닫아도 기존 레이아웃이 유지된다.
 
 # prefix+e: yazi 파일 매니저 팝업
-bind e display-popup -d "#{pane_current_path}" -w 90% -h 85% -E "yazi"
+# tmux popup은 passthrough를 지원하지 않아 yazi가 터미널을 감지하지 못한다.
+# 워크어라운드: 팝업 안에서 새 tmux 세션을 만들어 실행한다.
+# ref: https://github.com/sxyazi/yazi/issues/2308
+bind e display-popup -d "#{pane_current_path}" -w 90% -h 85% -E 'tmux new-session yazi \; set status off'
 
 # prefix+g: lazygit 팝업
 bind g display-popup -d "#{pane_current_path}" -w 90% -h 90% -E "lazygit"
@@ -1025,6 +1033,21 @@ tmux show -g escape-time
 </details>
 
 <details>
+<summary><b>tmux 팝업에서 yazi가 "Terminal response timeout" 에러를 표시한다</b></summary>
+
+tmux popup은 passthrough 이스케이프 시퀀스를 지원하지 않는다 ([tmux#4329](https://github.com/tmux/tmux/issues/4329)). yazi v25.2.7+는 passthrough로 터미널을 감지하므로 팝업에서 실패한다.
+
+**워크어라운드:** 팝업 안에서 새 tmux 세션을 만들어 실행한다 ([yazi#2308](https://github.com/sxyazi/yazi/issues/2308)):
+
+```bash
+# ~/.tmux.conf
+bind e display-popup -d "#{pane_current_path}" -w 90% -h 85% -E 'tmux new-session yazi \; set status off'
+```
+
+참고: 일반 tmux pane에서는 이 문제가 발생하지 않는다.
+</details>
+
+<details>
 <summary><b>yazi에서 이미지 미리보기가 안 된다</b></summary>
 
 Ghostty는 Kitty 이미지 프로토콜을 지원하므로 기본 동작한다. macOS 기본 Terminal.app은 이미지 미리보기를 지원하지 않는다.
@@ -1300,7 +1323,7 @@ bind -T copy-mode-vi y send -X copy-pipe-and-cancel "pbcopy"
 # ══════════════════════════════════════════════
 # 블록 4: 팝업 바인딩 (tmux 3.2+)
 # ══════════════════════════════════════════════
-bind e display-popup -d "#{pane_current_path}" -w 90% -h 85% -E "yazi"
+bind e display-popup -d "#{pane_current_path}" -w 90% -h 85% -E 'tmux new-session yazi \; set status off'
 bind g display-popup -d "#{pane_current_path}" -w 90% -h 90% -E "lazygit"
 bind f display-popup -d "#{pane_current_path}" -w 80% -h 80% -E \
     'file=$(fzf --preview "bat --color=always --style=numbers {}") && nvim "$file"'
