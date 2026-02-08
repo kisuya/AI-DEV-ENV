@@ -611,11 +611,12 @@ mkdir -p ~/.config/yazi
 ```
 
 ```toml
-[manager]
-show_hidden = true          # 숨김 파일(.env, .gitignore 등) 표시
-sort_by = "natural"         # 자연어 순서 정렬 (file1 < file2 < file10)
-sort_dir_first = true       # 디렉토리를 파일보다 위에 표시
-linemode = "size"           # 파일 크기를 오른쪽에 표시
+[mgr]
+ratio = [1, 3, 4]              # 부모:현재:미리보기 패널 비율
+show_hidden = true              # 숨김 파일(.env, .gitignore 등) 표시
+sort_by = "natural"             # 자연어 순서 정렬 (file1 < file2 < file10)
+sort_dir_first = true           # 디렉토리를 파일보다 위에 표시
+linemode = "size"               # 파일 크기를 오른쪽에 표시
 
 [preview]
 max_width = 1000            # 미리보기 최대 너비
@@ -653,27 +654,18 @@ rules = [
 
 ```toml
 # Enter: 기본 열기 (yazi 안에서 neovim이 열림)
-[[manager.prepend_keymap]]
+[[mgr.prepend_keymap]]
 on   = ["<Enter>"]
 run  = "open"
 desc = "Open file (nvim)"
 
-# V: 옆 tmux pane의 neovim에서 열기
-# 파일 트리(yazi)를 보면서 편집할 수 있다.
-[[manager.prepend_keymap]]
-on   = ["V"]
-run  = '''
-    shell 'tmux send-keys -t "{right}" "nvim \"$0\"" Enter' --confirm
-'''
-desc = "Open in nvim (right tmux pane)"
-
 # 자주 쓰는 디렉토리로 빠르게 이동
-[[manager.prepend_keymap]]
+[[mgr.prepend_keymap]]
 on   = ["g", "d"]
 run  = "cd ~/Dev"
 desc = "Go to Dev directory"
 
-[[manager.prepend_keymap]]
+[[mgr.prepend_keymap]]
 on   = ["g", "c"]
 run  = "cd ~/.config"
 desc = "Go to config directory"
@@ -915,7 +907,6 @@ dev ~/work/infra infra
 | **탐색** | 디렉토리 이동 | `h/l` 또는 `←/→` |
 | | 파일 이동 | `j/k` 또는 `↑/↓` |
 | | 파일 열기 (nvim) | `Enter` |
-| | 옆 tmux pane에서 열기 | `V` |
 | | 종료 | `q` |
 | **파일 작업** | 새 파일 / 새 디렉토리 | `a` / `A` |
 | | 이름 변경 | `r` |
@@ -1444,7 +1435,8 @@ mkdir -p ~/.config/yazi
 **파일: `~/.config/yazi/yazi.toml`** — 기존 파일이 있으면 백업 후 작성:
 
 ```toml
-[manager]
+[mgr]
+ratio = [1, 3, 4]
 show_hidden = true
 sort_by = "natural"
 sort_dir_first = true
@@ -1485,24 +1477,17 @@ rules = [
 **파일: `~/.config/yazi/keymap.toml`** — 기존 파일이 있으면 백업 후 작성:
 
 ```toml
-[[manager.prepend_keymap]]
+[[mgr.prepend_keymap]]
 on   = ["<Enter>"]
 run  = "open"
 desc = "Open file (nvim)"
 
-[[manager.prepend_keymap]]
-on   = ["V"]
-run  = '''
-    shell 'tmux send-keys -t "{right}" "nvim \"$0\"" Enter' --confirm
-'''
-desc = "Open in nvim (right tmux pane)"
-
-[[manager.prepend_keymap]]
+[[mgr.prepend_keymap]]
 on   = ["g", "d"]
 run  = "cd ~/Dev"
 desc = "Go to Dev directory"
 
-[[manager.prepend_keymap]]
+[[mgr.prepend_keymap]]
 on   = ["g", "c"]
 run  = "cd ~/.config"
 desc = "Go to config directory"
