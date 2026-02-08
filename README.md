@@ -952,6 +952,24 @@ dev ~/work/infra infra
 ## 트러블슈팅
 
 <details>
+<summary><b>프롬프트가 깨진다 (starship + oh-my-zsh 충돌)</b></summary>
+
+starship과 oh-my-zsh 테마(`ZSH_THEME="agnoster"` 등)가 동시에 활성화되면 프롬프트가 충돌하여 깨진다. 둘 중 하나만 사용해야 한다.
+
+**starship을 사용하려면** (권장):
+```bash
+# ~/.zshrc 에서 ZSH_THEME를 비활성화
+ZSH_THEME=""
+```
+
+**기존 oh-my-zsh 테마를 유지하려면**:
+```bash
+# ~/.zshrc 에서 starship 초기화 줄을 제거 또는 주석 처리
+# eval "$(starship init zsh)"
+```
+</details>
+
+<details>
 <summary><b>아이콘이 깨진다 (□, ? 표시)</b></summary>
 
 Nerd Font가 설치되어 있고 Ghostty에서 해당 폰트가 선택되어 있는지 확인한다.
@@ -1446,6 +1464,29 @@ desc = "Go to config directory"
 ---
 
 ### Step 12: 셸 환경 설정 (~/.zshrc)
+
+#### Step 12-1: 프롬프트 충돌 감지
+
+이 가이드는 **starship** 프롬프트를 사용한다. 기존 셸에 다른 프롬프트 테마(oh-my-zsh 테마, powerlevel10k 등)가 설정되어 있으면 **프롬프트가 충돌하여 깨진다.** 반드시 먼저 확인하고 사용자에게 선택을 요청한다.
+
+```bash
+# oh-my-zsh 테마 확인
+grep '^ZSH_THEME=' ~/.zshrc 2>/dev/null
+```
+
+**ZSH_THEME이 비어있지 않은 값으로 설정되어 있으면 (예: `ZSH_THEME="agnoster"`, `ZSH_THEME="robbyrussell"`)**, 사용자에게 다음을 안내하고 선택을 요청한다:
+
+> **프롬프트 충돌이 감지되었습니다.**
+> 현재 oh-my-zsh 테마(`ZSH_THEME="..."`)가 설정되어 있습니다.
+> 이 가이드의 starship 프롬프트와 동시에 사용하면 프롬프트가 깨집니다.
+>
+> 1. **starship 사용 (권장)** — `ZSH_THEME=""`로 변경합니다. starship이 git 브랜치, 언어 버전, 실행시간 등을 자동 표시합니다.
+> 2. **기존 테마 유지** — starship 설정을 건너뜁니다. 기존 프롬프트를 그대로 사용합니다.
+
+- 사용자가 **starship**을 선택하면: `ZSH_THEME=""`로 변경하고, 아래 블록을 그대로 추가한다.
+- 사용자가 **기존 테마 유지**를 선택하면: 아래 블록에서 `eval "$(starship init zsh)"` 줄을 제거하고 추가한다.
+
+#### Step 12-2: zshrc 블록 추가
 
 아래 블록을 `~/.zshrc`에 추가한다. **기존 내용은 건드리지 않는다.** `# === TUI-IDE-SETUP ===` 마커가 이미 있으면 해당 블록을 교체한다. 없으면 파일 끝에 추가한다.
 
